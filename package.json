@@ -1,0 +1,17 @@
+{
+  "name": "discord-bot-leetcode-challenges",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cron": "^1.8.2",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "playwright": "^1.8.0"
+  }
+}
