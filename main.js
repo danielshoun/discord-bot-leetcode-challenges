@@ -56,7 +56,7 @@ var job = new CronJob('0 8 * * *', async function() {
         try {
             let challengeObj = await challengeGetter.getDailyChallenge(currentMonth, currentYear, currentDay);
             let messageToSend = `${challengeObj.questionTitle}\n${challengeObj.questionUrl}\n\n${challengeObj.questionText}`
-            client.guilds.get(process.env.SERVER_ID).channels.get(process.env.CHANNEL_ID).send(messageToSend);
+            client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get(process.env.CHANNEL_ID).send(messageToSend);
             messageSendAttempts = 10;
         } catch(e) {
             console.log("Error sending message: ");

@@ -3,7 +3,7 @@ const playwright = require('playwright');
 async function getDailyChallenge(currentMonth, currentYear, currentDay) {
     let result = {};
 
-    const browser = await playwright['firefox'].launch();
+    const browser = await playwright['chromium'].launch({executablePath: "/usr/bin/chromium"});
     const context = await browser.newContext();
     const page = await context.newPage();
 
