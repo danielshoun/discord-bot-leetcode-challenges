@@ -9,7 +9,7 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
     let collector = sentMessage.createReactionCollector(filter);
     collector.on("collect", async (reaction, user) => {
         let member = await client.guilds.cache.get(process.env.SERVER_ID).members.fetch(user.id);
-        console.log(`Collected ${reaction.emoji.name} from ${member.nickname}`);
+        console.log(`Collected ${reaction.emoji.name} from ${member.displayName}`);
         const newEmbed = new Discord.MessageEmbed()
             .setColor("#FF0000")
             .setTitle("Mock Interview Session")
@@ -18,16 +18,16 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
         sentMessage.embeds[0].fields.forEach(field => {
             if(field.name === "Going") {
                 if(reaction.emoji.name === "🚫") {
-                    if(field.value.includes(member.nickname)) {
-                        if(field.value === member.nickname) {
+                    if(field.value.includes(member.displayName)) {
+                        if(field.value === member.displayName) {
                             newEmbed.addField("Going", "N/A");
-                            goingSet.delete(member.nickname);
+                            goingSet.delete(member.displayName);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
                         } else {
-                            newEmbed.addField("Going", field.value.replace(member.nickname + "\n", ""));
-                            goingSet.delete(member.nickname);
+                            newEmbed.addField("Going", field.value.replace(member.displayName + "\n", ""));
+                            goingSet.delete(member.displayName);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
@@ -36,16 +36,16 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
                         newEmbed.addField("Going", field.value)
                     }
                 } else {
-                    if(!field.value.includes(member.nickname)) {
+                    if(!field.value.includes(member.displayName)) {
                         if(field.value === "N/A") {
-                            newEmbed.addField("Going", member.nickname)
-                            goingSet.add(member.nickname);
+                            newEmbed.addField("Going", member.displayName)
+                            goingSet.add(member.displayName);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
                         } else {
-                            newEmbed.addField("Going", field.value + "\n" + member.nickname)
-                            goingSet.add(member.nickname);
+                            newEmbed.addField("Going", field.value + "\n" + member.displayName)
+                            goingSet.add(member.displayName);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
