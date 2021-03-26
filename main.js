@@ -57,6 +57,7 @@ try {
         }
     })
     console.log('questions.json loaded successfully.');
+    console.log(JSON.stringify(questionsJson, null, 2).slice(500));
 } catch (e) {
     console.error('Could not load questions.json')
     console.error(e);
@@ -162,5 +163,5 @@ const interviewEventJob = new CronJob('30 14 * * 0', async function () {
         let [person1, person2] = entry;
         message += `${person1} & ${person2}\n`;
     })
-})
+}, null, true, "America/New_York")
 interviewEventJob.start();
