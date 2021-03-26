@@ -47,6 +47,21 @@ try {
     console.error(e);
 }
 
+let questionsJson;
+
+try {
+    questionsJson = JSON.parse(fs.readFileSync('questions.json', 'utf-8'));
+    Object.keys(questionsJson).forEach(key => {
+        if(questionsJson[key]) {
+            delete questionsJson[key]
+        }
+    })
+    console.log('questions.json loaded successfully.');
+} catch (e) {
+    console.error('Could not load questions.json')
+    console.error(e);
+}
+
 const client = new Discord.Client();
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}`);
@@ -60,24 +75,24 @@ client.on('ready', () => {
 });
 
 client.on('message', async (receivedMessage) => {
-    if(receivedMessage.content === "/test") {
-        goingSet = new Set();
-        fs.writeFile('goingSet.json', '[]', () => console.log("goingSet.json reset."));
-        nextEventDate = new Date(new Date().getTime() + 432000000);
-        const messageEmbed = new Discord.MessageEmbed()
-            .setColor("#FF0000")
-            .setTitle("Mock Interview Session")
-            .setDescription("Pair up and talk your way through interview questions!")
-            .addFields(
-                {name: "Date", value: nextEventDate.toLocaleString() + " EST"},
-                {name: "Going", value: "N/A"}
-            )
-        let sentMessage = await client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get("805575527477805057").send(messageEmbed);
-        let messageData = {id: sentMessage.id, channel: "805575527477805057", date: nextEventDate}
-        fs.writeFile('messageData.json', JSON.stringify(messageData), () => console.log("messageData.json written."))
-
-        await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
-    }
+    // if(receivedMessage.content === "/test") {
+    //     goingSet = new Set();
+    //     fs.writeFile('goingSet.json', '[]', () => console.log("goingSet.json reset."));
+    //     nextEventDate = new Date(new Date().getTime() + 432000000);
+    //     const messageEmbed = new Discord.MessageEmbed()
+    //         .setColor("#FF0000")
+    //         .setTitle("Mock Interview Session")
+    //         .setDescription("Pair up and talk your way through interview questions!")
+    //         .addFields(
+    //             {name: "Date", value: nextEventDate.toLocaleString() + " EST"},
+    //             {name: "Going", value: "N/A"}
+    //         )
+    //     let sentMessage = await client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get("805575527477805057").send(messageEmbed);
+    //     let messageData = {id: sentMessage.id, channel: "805575527477805057", date: nextEventDate}
+    //     fs.writeFile('messageData.json', JSON.stringify(messageData), () => console.log("messageData.json written."))
+    //
+    //     await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
+    // }
 })
 
 client.login(process.env.DISCORD_TOKEN);
@@ -137,5 +152,14 @@ const interviewEventJob = new CronJob('30 14 * * 0', async function () {
             lonelyPerson = goingArr.pop();
         }
     }
+    let questionUrlKeys = Object.keys(questionsJson);
+    let questionUrl1 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    let questionUrl2 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+
+    let message = `Suggested LeetCode Questions\n${questionUrl1}\n${questionUrl2}\n\nPairs\n`;
+    Object.entries(pairs).forEach(entry => {
+        let [person1, person2] = entry;
+        message += `${person1} & ${person2}\n`;
+    })
 })
 interviewEventJob.start();
