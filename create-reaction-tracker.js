@@ -57,8 +57,8 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
                 }
             }
         })
+        console.log(JSON.stringify(newEmbed.fields, null, 2));
         let editedMessage = await sentMessage.edit(newEmbed)
-        console.log(editedMessage);
     })
     collector.on('end', collected => {
         console.log("Collector has finished.")

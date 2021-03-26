@@ -71,7 +71,6 @@ client.on('ready', () => {
             .then(async sentMessage => {
                 let collector = await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
                 console.log(`Reaction tracker created for message with ID ${currentMessageId}`);
-                console.log(collector);
             });
     }
 });
