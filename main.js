@@ -26,7 +26,7 @@ let goingSet = new Set();
 try {
     let goingJson = JSON.parse(fs.readFileSync('goingSet.json', 'utf-8'));
     goingSet = new Set(goingJson);
-    console.log("goingSet.json loaded successfully.");
+    console.log(`goingSet.json loaded successfully: ${goingSet}`);
 } catch (e) {
     console.error('Could not load goingSet.json.');
     console.error(e);
