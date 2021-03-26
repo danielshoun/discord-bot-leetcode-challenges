@@ -69,7 +69,9 @@ client.on('ready', () => {
     if(currentMessageId) {
         client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get(currentMessageChannel).messages.fetch(currentMessageId)
             .then(async sentMessage => {
-                await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
+                let collector = await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
+                console.log(`Reaction tracker created for message with ID ${currentMessageId}`);
+                console.log(collector);
             });
     }
 });
@@ -133,7 +135,7 @@ const interviewPostingJob = new CronJob('30 14 * * 3', async function () {
     let messageData = {id: sentMessage.id, channel: "799428918734094346", date: nextEventDate}
     fs.writeFile('messageData.json', JSON.stringify(messageData), () => console.log("messageData.json written."))
 
-    await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
+    let collector = await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
 }, null, true, "America/New_York")
 interviewPostingJob.start();
 

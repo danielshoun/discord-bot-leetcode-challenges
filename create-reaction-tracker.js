@@ -57,8 +57,11 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
                 }
             }
         })
-        sentMessage.edit(newEmbed)
+        let editedMessage = await sentMessage.edit(newEmbed)
+        console.log(editedMessage);
     })
+
+    return collector
 }
 
 module.exports = createReactionTracker;
