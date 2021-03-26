@@ -20,14 +20,20 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
                 if(reaction.emoji.name === "🚫") {
                     if(field.value.includes(member.displayName)) {
                         if(field.value === member.displayName) {
-                            newEmbed.addField("Going", "N/A");
                             goingSet.delete(member.displayName);
+                            console.log(`goingSet: ${goingSet}`);
+                            newEmbed.addField("Going", "N/A");
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
                         } else {
-                            newEmbed.addField("Going", field.value.replace(member.displayName + "\n", ""));
                             goingSet.delete(member.displayName);
+                            console.log(`goingSet: ${goingSet}`);
+                            let newGoingString = "";
+                            Array.from(goingSet).forEach(name => {
+                                newGoingString += `${name}\n`;
+                            });
+                            newEmbed.addField("Going", newGoingString);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
@@ -38,14 +44,20 @@ async function createReactionTracker(sentMessage, client, goingSet, nextEventDat
                 } else {
                     if(!field.value.includes(member.displayName)) {
                         if(field.value === "N/A") {
-                            newEmbed.addField("Going", member.displayName)
                             goingSet.add(member.displayName);
+                            console.log(`goingSet: ${goingSet}`);
+                            newEmbed.addField("Going", member.displayName)
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
                         } else {
-                            newEmbed.addField("Going", field.value + "\n" + member.displayName)
                             goingSet.add(member.displayName);
+                            console.log(`goingSet: ${goingSet}`);
+                            let newGoingString = "";
+                            Array.from(goingSet).forEach(name => {
+                                newGoingString += `${name}\n`;
+                            });
+                            newEmbed.addField("Going", newGoingString);
                             fs.writeFile('goingSet.json', JSON.stringify(Array.from(goingSet)), () => {
                                 console.log("Updated goingSet.json file.")
                             });
