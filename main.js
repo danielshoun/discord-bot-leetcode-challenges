@@ -26,7 +26,8 @@ let goingSet = new Set();
 try {
     let goingJson = JSON.parse(fs.readFileSync('goingSet.json', 'utf-8'));
     goingSet = new Set(goingJson);
-    console.log(`goingSet.json loaded successfully: ${goingSet}`);
+    console.log(`goingSet.json loaded successfully:`);
+    console.log(goingSet);
 } catch (e) {
     console.error('Could not load goingSet.json.');
     console.error(e);
@@ -95,6 +96,35 @@ client.on('message', async (receivedMessage) => {
     //
     //     await createReactionTracker(sentMessage, client, goingSet, nextEventDate);
     // }
+    let goingArr = Array.from(goingSet);
+    let pairs = {}
+    let lonelyPerson;
+    while (goingArr.length > 0) {
+        if(goingArr.length > 1) {
+            const randomPerson1 = goingArr[Math.floor(Math.random() * goingArr.length)];
+            goingArr.splice(goingArr.indexOf(randomPerson1), 1);
+            const randomPerson2 = goingArr[Math.floor(Math.random() * goingArr.length)];
+            goingArr.splice(goingArr.indexOf(randomPerson2), 1);
+            pairs[randomPerson1] = randomPerson2;
+        } else {
+            lonelyPerson = goingArr.pop();
+        }
+    }
+    let questionUrlKeys = Object.keys(questionsJson);
+    let questionUrl1 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    let questionUrl2 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    
+    if(receivedMessage.content === '/test') {
+        let message = `Suggested LeetCode Questions\n${questionUrl1}\n${questionUrl2}\n\nPairs\n`;
+    Object.entries(pairs).forEach(entry => {
+        let [person1, person2] = entry;
+        message += `${person1} & ${person2}\n`;
+    })
+    if(lonelyPerson) {    
+    message += `\n${lonelyPerson} will need to work in a group of 3.`
+    }
+    await client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get("805575527477805057").send(message);
+    }
 })
 
 client.login(process.env.DISCORD_TOKEN);
@@ -163,5 +193,9 @@ const interviewEventJob = new CronJob('30 14 * * 0', async function () {
         let [person1, person2] = entry;
         message += `${person1} & ${person2}\n`;
     })
+    if(lonelyPerson) {    
+    message += `\n${lonelyPerson} will need to work in a group of 3.`
+    }
+    await client.guilds.cache.get(process.env.SERVER_ID).channels.cache.get("799428918734094346").send(message);
 }, null, true, "America/New_York")
 interviewEventJob.start();
