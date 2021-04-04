@@ -51,11 +51,6 @@ let questionsJson;
 
 try {
     questionsJson = JSON.parse(fs.readFileSync('questions.json', 'utf-8'));
-    Object.keys(questionsJson).forEach(key => {
-        if(questionsJson[key]) {
-            delete questionsJson[key]
-        }
-    })
     console.log('questions.json loaded successfully.');
     console.log(JSON.stringify(questionsJson, null, 2).slice(500));
 } catch (e) {
@@ -156,7 +151,13 @@ const interviewEventJob = new CronJob('30 14 * * 0', async function () {
     }
     let questionUrlKeys = Object.keys(questionsJson);
     let questionUrl1 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    while(questionsJson[questionUrl1]) {
+        questionUrl1 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    }
     let questionUrl2 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    while(questionsJson[questionUrl2]) {
+        questionUrl2 = questionUrlKeys[questionUrlKeys.length * Math.random() << 0]
+    }
 
     let message = `Suggested LeetCode Questions\n${questionUrl1}\n${questionUrl2}\n\nPairs\n`;
     Object.entries(pairs).forEach(entry => {
